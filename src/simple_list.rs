@@ -9,7 +9,7 @@ pub struct Main {
 impl Render for Main {
     fn render(&mut self, _cx: &mut ViewContext<Self>) -> impl IntoElement {
         let state_model_clone = self.state_model.clone();
-        let button = div()
+        let add_item_button = div()
             .flex()
             .p_2()
             .bg(rgb(0x2a2a2a))
@@ -29,6 +29,20 @@ impl Render for Main {
                 });
             });
 
+        let quit_button = div()
+            .flex()
+            .p_2()
+            .bg(rgb(0x2a2a2a))
+            .rounded_md()
+            .hover(|s| s.bg(rgb(0x3a3a3a)))
+            .text_color(rgb(0xffffff))
+            .text_xl()
+            .cursor(CursorStyle::PointingHand)
+            .child("Quit")
+            .on_mouse_down(MouseButton::Left, move |_mde, _cx| {
+                println!("We got the click !");
+            });
+
         div()
             .size_full()
             .flex()
@@ -41,7 +55,8 @@ impl Render for Main {
                     .py_2()
                     .justify_center()
                     .items_center()
-                    .child(button),
+                    .child(add_item_button)
+                    .child(quit_button),
             )
     }
 }
