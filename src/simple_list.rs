@@ -56,6 +56,7 @@ impl Render for Main {
                     .justify_center()
                     .items_center()
                     .child(add_item_button)
+                    .gap_3()
                     .child(quit_button),
             )
     }
