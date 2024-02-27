@@ -39,8 +39,9 @@ impl Render for Main {
             .text_xl()
             .cursor(CursorStyle::PointingHand)
             .child("Quit")
-            .on_mouse_down(MouseButton::Left, move |_mde, _cx| {
-                println!("We got the click !");
+            .on_mouse_down(MouseButton::Left, move |_mde, cx| {
+                println!("We got the quit click !");
+                cx.quit();
             });
 
         div()
