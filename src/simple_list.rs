@@ -98,12 +98,13 @@ impl Main {
                     div().into_any_element()
                 }),
                 state_model,
+                gpuilist_actions: Default::default(),
             }
         })
     }
 
     fn quit(&mut self, _: &Quit, cx: &mut ViewContext<Self>) {
-        cx.spawn(|this, mut cx| async move {
+        cx.spawn(|_this, mut cx| async move {
             cx.update(|cx| cx.quit())?;
             anyhow::Ok(())
         })
