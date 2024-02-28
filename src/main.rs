@@ -2,6 +2,7 @@ mod assets;
 mod collections;
 mod common;
 mod keymap_file;
+mod settings;
 mod simple_list;
 mod util;
 

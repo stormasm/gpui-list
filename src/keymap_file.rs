@@ -1,6 +1,6 @@
 use crate::collections::BTreeMap;
+use crate::settings::SettingsAssets;
 use crate::util::{asset_str, ResultExt};
-use crate::SettingsAssets;
 use anyhow::{anyhow, Context, Result};
 use gpui::{Action, AppContext, KeyBinding, SharedString};
 use schemars::{
