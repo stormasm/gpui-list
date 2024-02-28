@@ -1,6 +1,6 @@
 use crate::collections::BTreeMap;
 use crate::util::{asset_str, ResultExt};
-use crate::{settings_store::parse_json_with_comments, SettingsAssets};
+use crate::SettingsAssets;
 use anyhow::{anyhow, Context, Result};
 use gpui::{Action, AppContext, KeyBinding, SharedString};
 use schemars::{
@@ -8,6 +8,7 @@ use schemars::{
     schema::{InstanceType, Schema, SchemaObject, SingleOrVec, SubschemaValidation},
     JsonSchema,
 };
+use serde::de::DeserializeOwned;
 use serde::Deserialize;
 use serde_json::Value;
 
@@ -135,6 +136,10 @@ impl KeymapFile {
 
         serde_json::to_value(root_schema).unwrap()
     }
+}
+
+pub fn parse_json_with_comments<T: DeserializeOwned>(content: &str) -> Result<T> {
+    Ok(serde_json_lenient::from_str(content)?)
 }
 
 fn no_action() -> Box<dyn gpui::Action> {
