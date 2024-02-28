@@ -1632,6 +1632,7 @@ name = "gpui-list"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "backtrace",
  "gpui",
  "log",
  "rust-embed",
