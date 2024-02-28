@@ -1,4 +1,5 @@
 mod assets;
+mod collections;
 mod common;
 mod keymap_file;
 mod simple_list;

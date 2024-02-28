@@ -1,6 +1,6 @@
+use crate::collections::BTreeMap;
 use crate::{settings_store::parse_json_with_comments, SettingsAssets};
 use anyhow::{anyhow, Context, Result};
-use collections::BTreeMap;
 use gpui::{Action, AppContext, KeyBinding, SharedString};
 use schemars::{
     gen::{SchemaGenerator, SchemaSettings},
