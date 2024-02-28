@@ -1,0 +1,8 @@
+[
+  // Standard macOS bindings
+  {
+    "bindings": {
+      "cmd-q": "gpuilist::Quit"
+    }
+  }
+]
