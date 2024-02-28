@@ -169,18 +169,21 @@ impl Main {
     */
 }
 
-/*
-use gpui::actions;
-actions!(gpuilist, [Quit]);
-
 pub fn init(cx: &mut AppContext) {
     cx.on_action(quit);
 }
-*/
+
+fn quit(_: &Quit, cx: &mut AppContext) {
+    cx.spawn(|cx| async move {
+        cx.update(|cx| cx.quit())?;
+        anyhow::Ok(())
+    })
+    .detach_and_log_err(cx);
+}
 
 pub fn run_app(app: App) {
     app.run(|cx: &mut AppContext| {
-        //init(cx);
+        init(cx);
         let window_options = setup_window(WIDTH, HEIGHT, cx);
         load_keymap(cx);
         cx.open_window(window_options, |cx| Main::new(cx));
