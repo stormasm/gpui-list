@@ -1,4 +1,5 @@
 use crate::common::{setup_window, ListItem, State, HEIGHT, WIDTH};
+use crate::keymap_file::KeymapFile;
 use gpui::*;
 
 pub struct Main {
@@ -181,6 +182,11 @@ pub fn run_app(app: App) {
     app.run(|cx: &mut AppContext| {
         //init(cx);
         let window_options = setup_window(WIDTH, HEIGHT, cx);
+        load_keymap(cx);
         cx.open_window(window_options, |cx| Main::new(cx));
     });
+}
+
+fn load_keymap(cx: &mut AppContext) {
+    KeymapFile::load_asset("keymaps/default.json", cx).unwrap();
 }
