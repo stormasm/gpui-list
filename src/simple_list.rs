@@ -4,10 +4,17 @@ use gpui::*;
 pub struct Main {
     list_state: ListState,
     state_model: Model<State>,
+    gpuilist_actions: Vec<Box<dyn Fn(Div, &mut ViewContext<Self>) -> Div>>,
 }
 
+use gpui::actions;
+actions!(gpuilist, [Quit]);
+
 impl Render for Main {
-    fn render(&mut self, _cx: &mut ViewContext<Self>) -> impl IntoElement {
+    fn render(&mut self, cx: &mut ViewContext<Self>) -> impl IntoElement {
+        let mut context = KeyContext::default();
+        context.add("gpuilist");
+
         let state_model_clone = self.state_model.clone();
         let add_item_button = div()
             .flex()
@@ -44,7 +51,8 @@ impl Render for Main {
                 cx.quit();
             });
 
-        div()
+        self.actions(div(), cx)
+            .key_context(context)
             .size_full()
             .flex()
             .flex_col()
@@ -93,26 +101,84 @@ impl Main {
             }
         })
     }
+
+    fn quit(&mut self, _: &Quit, cx: &mut ViewContext<Self>) {
+        cx.spawn(|this, mut cx| async move {
+            cx.update(|cx| cx.quit())?;
+            anyhow::Ok(())
+        })
+        .detach_and_log_err(cx);
+    }
+
+    /*
+        a model for how quit should work from workspace
+
+        fn add_folder_to_project(&mut self, _: &AddFolderToProject, cx: &mut ViewContext<Self>) {
+            let paths = cx.prompt_for_paths(PathPromptOptions {
+                files: false,
+                directories: true,
+                multiple: true,
+            });
+            cx.spawn(|this, mut cx| async move {
+                if let Some(paths) = paths.await.log_err().flatten() {
+                    let results = this
+                        .update(&mut cx, |this, cx| {
+                            this.open_paths(paths, OpenVisible::All, None, cx)
+                        })?
+                        .await;
+                    for result in results.into_iter().flatten() {
+                        result.log_err();
+                    }
+                }
+                anyhow::Ok(())
+            })
+            .detach_and_log_err(cx);
+        }
+    */
+
+    fn add_workspace_actions_listeners(&self, div: Div, cx: &mut ViewContext<Self>) -> Div {
+        let mut div = div.on_action(cx.listener(Self::quit));
+        for action in self.gpuilist_actions.iter() {
+            div = (action)(div, cx)
+        }
+        div
+    }
+
+    /*
+    fn add_workspace_actions_listeners(&self, div: Div, cx: &mut ViewContext<Self>) -> Div {
+        let mut div = div.on_action(cx.listener(cx.quit));
+        for action in self.gpuilist_actions.iter() {
+            div = (action)(div, cx)
+        }
+        div
+    }
+    */
+
+    fn actions(&self, div: Div, cx: &mut ViewContext<Self>) -> Div {
+        self.add_workspace_actions_listeners(div, cx)
+            .on_action(cx.listener(Self::quit))
+    }
+
+    /*
+    fn actions(&self, div: Div, cx: &mut ViewContext<Self>) -> Div {
+        self.add_workspace_actions_listeners(div, cx)
+            .on_action(cx.listener(cx.quit()))
+    }
+    */
 }
 
+/*
 use gpui::actions;
 actions!(gpuilist, [Quit]);
 
 pub fn init(cx: &mut AppContext) {
     cx.on_action(quit);
 }
-
-fn quit(_: &Quit, cx: &mut AppContext) {
-    cx.spawn(|cx| async move {
-        cx.update(|cx| cx.quit())?;
-        anyhow::Ok(())
-    })
-    .detach_and_log_err(cx);
-}
+*/
 
 pub fn run_app(app: App) {
     app.run(|cx: &mut AppContext| {
-        init(cx);
+        //init(cx);
         let window_options = setup_window(WIDTH, HEIGHT, cx);
         cx.open_window(window_options, |cx| Main::new(cx));
     });
