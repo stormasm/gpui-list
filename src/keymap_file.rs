@@ -1,4 +1,5 @@
 use crate::collections::BTreeMap;
+use crate::util::{asset_str, ResultExt};
 use crate::{settings_store::parse_json_with_comments, SettingsAssets};
 use anyhow::{anyhow, Context, Result};
 use gpui::{Action, AppContext, KeyBinding, SharedString};
@@ -9,7 +10,6 @@ use schemars::{
 };
 use serde::Deserialize;
 use serde_json::Value;
-use util::{asset_str, ResultExt};
 
 #[derive(Debug, Deserialize, Default, Clone, JsonSchema)]
 #[serde(transparent)]
