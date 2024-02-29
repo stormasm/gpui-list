@@ -1,5 +1,3 @@
-//use crate::collections::BTreeMap;
-//use crate::settings::SettingsAssets;
 use crate::util::{asset_str, ResultExt};
 use anyhow::{anyhow, Context, Result};
 use gpui::{Action, AppContext, KeyBinding};
@@ -102,48 +100,6 @@ impl KeymapFile {
         }
         Ok(())
     }
-
-    /*
-    pub fn generate_json_schema(action_names: &[SharedString]) -> serde_json::Value {
-        let mut root_schema = SchemaSettings::draft07()
-            .with(|settings| settings.option_add_null_type = false)
-            .into_generator()
-            .into_root_schema_for::<KeymapFile>();
-
-        let action_schema = Schema::Object(SchemaObject {
-            subschemas: Some(Box::new(SubschemaValidation {
-                one_of: Some(vec![
-                    Schema::Object(SchemaObject {
-                        instance_type: Some(SingleOrVec::Single(Box::new(InstanceType::String))),
-                        enum_values: Some(
-                            action_names
-                                .iter()
-                                .map(|name| Value::String(name.to_string()))
-                                .collect(),
-                        ),
-                        ..Default::default()
-                    }),
-                    Schema::Object(SchemaObject {
-                        instance_type: Some(SingleOrVec::Single(Box::new(InstanceType::Array))),
-                        ..Default::default()
-                    }),
-                    Schema::Object(SchemaObject {
-                        instance_type: Some(SingleOrVec::Single(Box::new(InstanceType::Null))),
-                        ..Default::default()
-                    }),
-                ]),
-                ..Default::default()
-            })),
-            ..Default::default()
-        });
-
-        root_schema
-            .definitions
-            .insert("KeymapAction".to_owned(), action_schema);
-
-        serde_json::to_value(root_schema).unwrap()
-    }
-    */
 }
 
 pub fn parse_json_with_comments<T: DeserializeOwned>(content: &str) -> Result<T> {
@@ -152,25 +108,4 @@ pub fn parse_json_with_comments<T: DeserializeOwned>(content: &str) -> Result<T>
 
 fn no_action() -> Box<dyn gpui::Action> {
     gpui::NoAction.boxed_clone()
-}
-
-#[cfg(test)]
-mod tests {
-    use crate::KeymapFile;
-
-    #[test]
-    fn can_deserialize_keymap_with_trailing_comma() {
-        let json = indoc::indoc! {"[
-              // Standard macOS bindings
-              {
-                \"bindings\": {
-                  \"up\": \"menu::SelectPrev\",
-                },
-              },
-            ]
-                  "
-
-        };
-        KeymapFile::parse(json).unwrap();
-    }
 }

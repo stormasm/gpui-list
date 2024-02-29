@@ -112,32 +112,6 @@ impl Main {
         .detach_and_log_err(cx);
     }
 
-    /*
-        a model for how quit should work from workspace
-
-        fn add_folder_to_project(&mut self, _: &AddFolderToProject, cx: &mut ViewContext<Self>) {
-            let paths = cx.prompt_for_paths(PathPromptOptions {
-                files: false,
-                directories: true,
-                multiple: true,
-            });
-            cx.spawn(|this, mut cx| async move {
-                if let Some(paths) = paths.await.log_err().flatten() {
-                    let results = this
-                        .update(&mut cx, |this, cx| {
-                            this.open_paths(paths, OpenVisible::All, None, cx)
-                        })?
-                        .await;
-                    for result in results.into_iter().flatten() {
-                        result.log_err();
-                    }
-                }
-                anyhow::Ok(())
-            })
-            .detach_and_log_err(cx);
-        }
-    */
-
     fn add_workspace_actions_listeners(&self, div: Div, cx: &mut ViewContext<Self>) -> Div {
         let mut div = div.on_action(cx.listener(Self::quit));
         for action in self.gpuilist_actions.iter() {
@@ -146,27 +120,10 @@ impl Main {
         div
     }
 
-    /*
-    fn add_workspace_actions_listeners(&self, div: Div, cx: &mut ViewContext<Self>) -> Div {
-        let mut div = div.on_action(cx.listener(cx.quit));
-        for action in self.gpuilist_actions.iter() {
-            div = (action)(div, cx)
-        }
-        div
-    }
-    */
-
     fn actions(&self, div: Div, cx: &mut ViewContext<Self>) -> Div {
         self.add_workspace_actions_listeners(div, cx)
             .on_action(cx.listener(Self::quit))
     }
-
-    /*
-    fn actions(&self, div: Div, cx: &mut ViewContext<Self>) -> Div {
-        self.add_workspace_actions_listeners(div, cx)
-            .on_action(cx.listener(cx.quit()))
-    }
-    */
 }
 
 pub fn init(cx: &mut AppContext) {
