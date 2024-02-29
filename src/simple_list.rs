@@ -9,7 +9,7 @@ pub struct Main {
 }
 
 use gpui::actions;
-actions!(gpuilist, [Quit]);
+actions!(gpuilist, [AddItem, Quit]);
 
 impl Render for Main {
     fn render(&mut self, cx: &mut ViewContext<Self>) -> impl IntoElement {

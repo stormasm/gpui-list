@@ -2,6 +2,7 @@
   // Standard macOS bindings
   {
     "bindings": {
+      "cmd-i": "gpuilist::AddItem",
       "cmd-q": "gpuilist::Quit"
     }
   }
