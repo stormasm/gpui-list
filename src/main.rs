@@ -1,8 +1,8 @@
 mod assets;
-mod collections;
+//mod collections;
 mod common;
 mod keymap_file;
-mod settings;
+//mod settings;
 mod simple_list;
 mod util;
 

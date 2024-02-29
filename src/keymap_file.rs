@@ -1,16 +1,22 @@
-use crate::collections::BTreeMap;
-use crate::settings::SettingsAssets;
+//use crate::collections::BTreeMap;
+//use crate::settings::SettingsAssets;
 use crate::util::{asset_str, ResultExt};
 use anyhow::{anyhow, Context, Result};
-use gpui::{Action, AppContext, KeyBinding, SharedString};
-use schemars::{
-    gen::{SchemaGenerator, SchemaSettings},
-    schema::{InstanceType, Schema, SchemaObject, SingleOrVec, SubschemaValidation},
-    JsonSchema,
-};
+use gpui::{Action, AppContext, KeyBinding};
+use schemars::{gen::SchemaGenerator, schema::Schema, JsonSchema};
 use serde::de::DeserializeOwned;
 use serde::Deserialize;
 use serde_json::Value;
+pub use std::collections::*;
+
+use rust_embed::RustEmbed;
+
+#[derive(RustEmbed)]
+#[folder = "./assets"]
+#[include = "settings/*"]
+#[include = "keymaps/*"]
+#[exclude = "*.DS_Store"]
+pub struct SettingsAssets;
 
 #[derive(Debug, Deserialize, Default, Clone, JsonSchema)]
 #[serde(transparent)]
@@ -97,6 +103,7 @@ impl KeymapFile {
         Ok(())
     }
 
+    /*
     pub fn generate_json_schema(action_names: &[SharedString]) -> serde_json::Value {
         let mut root_schema = SchemaSettings::draft07()
             .with(|settings| settings.option_add_null_type = false)
@@ -136,6 +143,7 @@ impl KeymapFile {
 
         serde_json::to_value(root_schema).unwrap()
     }
+    */
 }
 
 pub fn parse_json_with_comments<T: DeserializeOwned>(content: &str) -> Result<T> {
