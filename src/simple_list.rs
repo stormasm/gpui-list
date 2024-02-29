@@ -104,6 +104,10 @@ impl Main {
         })
     }
 
+    fn add_item(&mut self, _: &AddItem, _cx: &mut ViewContext<Self>) {
+        println!("got a keyboard add item");
+    }
+
     fn quit(&mut self, _: &Quit, cx: &mut ViewContext<Self>) {
         cx.spawn(|_this, mut cx| async move {
             cx.update(|cx| cx.quit())?;
@@ -113,7 +117,9 @@ impl Main {
     }
 
     fn add_workspace_actions_listeners(&self, div: Div, cx: &mut ViewContext<Self>) -> Div {
-        let mut div = div.on_action(cx.listener(Self::quit));
+        let mut div = div
+            .on_action(cx.listener(Self::quit))
+            .on_action(cx.listener(Self::add_item));
         for action in self.gpuilist_actions.iter() {
             div = (action)(div, cx)
         }
@@ -123,11 +129,24 @@ impl Main {
     fn actions(&self, div: Div, cx: &mut ViewContext<Self>) -> Div {
         self.add_workspace_actions_listeners(div, cx)
             .on_action(cx.listener(Self::quit))
+            .on_action(cx.listener(Self::add_item))
     }
 }
 
 pub fn init(cx: &mut AppContext) {
     cx.on_action(quit);
+    cx.on_action(add_item);
+}
+
+fn add_item(_: &AddItem, cx: &mut AppContext) {
+    println!("got an add_item");
+    /*
+    cx.spawn(|cx| async move {
+        cx.update(|cx| cx.quit())?;
+        anyhow::Ok(())
+    })
+    .detach_and_log_err(cx);
+    */
 }
 
 fn quit(_: &Quit, cx: &mut AppContext) {
