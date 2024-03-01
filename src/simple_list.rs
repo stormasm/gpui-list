@@ -55,6 +55,7 @@ impl Render for Main {
         self.actions(div(), cx)
             .key_context(context)
             .size_full()
+            .on_action(cx.listener(|gpuilist, _: &AddItem, cx| gpuilist.add_item(&AddItem, cx)))
             .flex()
             .flex_col()
             .child(list(self.list_state.clone()).w_full().h_full())
@@ -105,7 +106,7 @@ impl Main {
     }
 
     fn add_item(&mut self, _: &AddItem, _cx: &mut ViewContext<Self>) {
-        println!("got a keyboard add item");
+        println!("yes indeed we did get a keyboard add item");
     }
 
     fn quit(&mut self, _: &Quit, cx: &mut ViewContext<Self>) {
@@ -138,7 +139,7 @@ pub fn init(cx: &mut AppContext) {
     cx.on_action(add_item);
 }
 
-fn add_item(_: &AddItem, cx: &mut AppContext) {
+fn add_item(_: &AddItem, _cx: &mut AppContext) {
     println!("got an add_item");
     /*
     cx.spawn(|cx| async move {
